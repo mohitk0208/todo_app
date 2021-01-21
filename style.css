@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap');
+
+:root {
+	--bright-blue: hsl(220, 98%, 61%);
+
+	/* for light theme */
+	--v-l-gray: hsl(0, 0%, 98%);
+	--v-l-g-blue: hsl(236, 33%, 92%);
+	--l-g-blue: hsl(233, 11%, 84%);
+	--d-g-blue: hsl(236, 9%, 61%);
+	--v-d-g-blue: hsl(235, 19%, 35%);
+
+	/* for dark theme */
+	--v-d-blue: hsl(235, 21%, 11%);
+	--v-d-desaturated-blue: hsl(235, 24%, 19%);
+	--l-g-blue-D: hsl(234, 39%, 85%);
+	--l-g-blue-hover-D: hsl(236, 33%, 92%);
+	--d-g-blue-D: hsl(234, 11%, 52%);
+	--v-d-g-blue-D: hsl(233, 14%, 35%);
+	--v-d-g-blue-2-D: hsl(237, 14%, 26%);
+
+	/* usage variables */
+	--check-background: linear-gradient(
+		to right,
+		hsl(192, 100%, 67%),
+		hsl(280, 87%, 65%)
+	);
+	--bg-color: var(--l-g-blue);
+	--heading-color: var(--v-l-gray);
+	--text-color: var(--v-d-g-blue);
+	--todo-background: var(--v-l-g-blue);
+	--selected-filter-color: var(--bright-blue);
+	--secondary-text-color: var(--d-g-blue);
+
+	--background-image: url("./images/bg-mobile-light.jpg");
+	--mode-icon: url("./images/icon-moon.svg");
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body.dark {
+	--bg-color: var(--v-d-blue);
+	/* --heading-color:var(--l-g-blue-D); */
+	--text-color: var(--l-g-blue-D);
+	--todo-background: var(--v-d-desaturated-blue);
+	--secondary-text-color: var(--v-d-g-blue-D);
+
+	--background-image: url("./images/bg-mobile-dark.jpg");
+	--mode-icon: url("./images/icon-sun.svg");
+}
+
+body {
+	width: 100vw;
+	height: 100vh;
+	background-color: var(--bg-color);
+	background-image: var(--background-image);
+	background-repeat: no-repeat;
+	background-size: 100%;
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+    
+    font-family: 'Josefin Sans', sans-serif;
+
+	transition: background-color 0.25s ease-in-out,
+		background-image 0.25s ease-in-out;
+}
+
+.todo-container {
+	/* background-color: var(--todo-background); */
+	width: clamp(300px, 90%, 500px);
+	height: 100%;
+}
+
+.todo-header {
+	color: var(--heading-color);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 10%;
+}
+
+.todo-header h2 {
+	text-transform: uppercase;
+	letter-spacing: 10px;
+	font-size: 1.8rem;
+}
+
+.todo-mode {
+	width: 26px;
+	height: 26px;
+    background: var(--mode-icon) no-repeat;
+    transition: background-image 0.3s ease-in-out;
+}
