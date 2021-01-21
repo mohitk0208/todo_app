@@ -21,7 +21,7 @@
 
 	/* usage variables */
 	--check-background: linear-gradient(
-		to right,
+		120deg,
 		hsl(192, 100%, 67%),
 		hsl(280, 87%, 65%)
 	);
@@ -65,6 +65,7 @@ body {
     align-items: center;
     
     font-family: 'Josefin Sans', sans-serif;
+    font-size: 18px;
 
 	transition: background-color 0.25s ease-in-out,
 		background-image 0.25s ease-in-out;
@@ -95,4 +96,99 @@ body {
 	height: 26px;
     background: var(--mode-icon) no-repeat;
     transition: background-image 0.3s ease-in-out;
+}
+
+.todo-items-container {
+	border-radius: 5px;
+}
+
+.todo-items-container > .todo-box:first-child {
+	border-radius: 5px 5px 0 0;
+}
+
+
+.todo-box {
+    background-color: var(--todo-background);
+    width: 100%;
+    padding: 15px 18px;
+	position: relative;
+	display: flex;
+	color: var(--text-color);
+	align-items: center;
+
+	transition: background-color 0.25s ease-in-out;
+}
+
+.todo-add {
+	margin: 10% 0 5% 0;
+	border-radius: 5px;
+}
+.todo-add input {
+	order: 1;
+	background-color: transparent;
+	border-style: none;
+	outline: none;
+	color: var(--text-color);
+	padding: 0 15px;
+	width: 100%;
+	line-height: 1.5rem;
+}
+
+.checkbox {
+	/* position: absolute; */
+	order: 0;
+	width: 20px;
+	height: 20px;
+	/* background-image: url("./images/icon-check.svg"), var(--check-background); */
+	/* background-repeat: no-repeat; */
+	border: 1px solid var(--secondary-text-color);
+	background-position: 50%;
+	border-radius: 100%;
+	border: 1px solid var();
+	left: 5%;
+}
+
+.todo-item {
+	border-bottom: 1px solid var(--secondary-text-color);
+}
+
+.todo-item:hover {
+	background-color: var(--v-d-g-blue-2-D);
+}
+
+.todo-item input {
+	order: 0;
+	width: 0;
+	height: 0;
+}
+.todo-item label {
+	order: 1;
+	padding: 0 15px;
+	font-size: 0.9rem;
+	color: var(--text-color);
+	width: 100%;
+	transition: all 0.25s ease-in-out;
+}
+
+.todo-item .checkmark {
+	order: 0;
+	width: 20px;
+	height: 20px;
+	border: 1px solid var(--secondary-text-color);
+	border-radius: 50%;
+}
+
+.todo-item input:checked ~ .checkmark {
+	background-image: url("./images/icon-check.svg"), var(--check-background);
+	background-repeat: no-repeat;
+	background-position: 50%;
+}
+
+.todo-item input:checked ~ label {
+	text-decoration: line-through;
+	color: var(--secondary-text-color);
+}
+
+.todo-item img {
+	order: 2;
 }
