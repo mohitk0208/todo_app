@@ -1,6 +1,6 @@
 const body = document.querySelector("body");
 const todoMode = document.querySelector(".todo-mode");
-
+const todoAdd = document.querySelector(".todo-add");
 
 //set to dark mode if the system is in dark mode
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -28,3 +28,7 @@ todoMode.addEventListener("click", () => {
 	body.classList.toggle("dark");
 });
 
+
+todoAdd.addEventListener("submit",(e) => {
+	alert("submit");
+})

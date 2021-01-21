@@ -192,3 +192,43 @@ body {
 .todo-item img {
 	order: 2;
 }
+
+.options-container {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.8rem;
+	color: var(--secondary-text-color);
+	padding: 18px;
+	border-radius: 0 0 5px 5px;
+}
+
+.mobile-filter {
+	display: none;
+}
+
+.filter {
+	border-radius: 5px;
+	margin-top: 5%;
+	align-items: center;
+	justify-content: center;
+}
+
+.filter p {
+	padding: 0 10px;
+	color: var(--secondary-text-color);
+	font-size: 1rem;
+	font-weight: 700;
+}
+
+.filter p.active {
+	color: var(--bright-blue);
+}
+
+.dnd {
+	position: fixed;
+	bottom: 15%;
+	width: 95%;
+	text-align: center;
+	color: var(--secondary-text-color);
+	font-size: 1rem;
+}
