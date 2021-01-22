@@ -70,7 +70,6 @@ todoMode.addEventListener("click", () => {
 });
 //________________________________________________________________________
 
-
 //________________________________________________________________________
 todoAdd.addEventListener("submit", (e) => {
 	e.preventDefault();
@@ -79,17 +78,16 @@ todoAdd.addEventListener("submit", (e) => {
 
 	const todo = new TodoItem(todoText.value);
 	console.log(todo);
-	// makeNewTodo(todo.value, todo.createdAt);
 	todoItems.push(todo);
 	setItemsLeftCount();
-	setTodos(getFilteredList(todoItems,selectedFilterType));
+	setTodos();
 	console.log(todoItems);
 
 	todoText.value = "";
 });
 
 // todo Item
-const todoItem = (text, todoId) => {
+const todoItem = ({value:text, createdAt:todoId,isCompleted:isCompleteStatus }) => {
 	const div = document.createElement("div");
 	div.classList.add("todo-box", "todo-item");
 	div.setAttribute("data-id", todoId);
@@ -98,6 +96,7 @@ const todoItem = (text, todoId) => {
 	checkbox.type = "checkbox";
 	checkbox.name = `item-${todoId}`;
 	checkbox.id = `item-${todoId}`;
+	checkbox.checked = isCompleteStatus;
 
 	checkbox.addEventListener("change", () => {
 		const isCompleted = checkbox.checked;
@@ -135,20 +134,13 @@ const todoItem = (text, todoId) => {
 		todoItems = todoItems.filter((t) => t.createdAt !== todoId);
 		setItemsLeftCount();
 
-		setTodos(getFilteredList(todoItems,selectedFilterType));
+		setTodos();
 		// TodoToDelete.remove();
 	});
 
 	div.appendChild(clearTodo);
 
 	return div;
-};
-
-const makeNewTodo = (todoText, todoId) => {
-	todoItemsContainer.insertBefore(
-		todoItem(todoText, todoId),
-		todoItemsContainer.childNodes[0]
-	);
 };
 // _________________________________________________________________________
 
@@ -158,13 +150,16 @@ clearCompletedBtn.addEventListener("click", () => {
 	todoItems = todoItems.filter((t) => t.isCompleted === false);
 	console.log("final array", todoItems);
 	setItemsLeftCount();
-	setTodos(getFilteredList(todoItems,selectedFilterType));
+	setTodos();
 });
 
-const setTodos = (todoList, compareType = "default") => {
+const setTodos = () => {
 	todoItemsContainer.innerHTML = "";
 
-	todoList = getFilteredList(todoItems,selectedFilterType);
+	let compareType = "default";
+
+	todoList = getFilteredList(todoItems, selectedFilterType);
+	if (selectedFilterType === "completed") compareType = "completed";
 
 	const compareFuncs = {
 		default: (a, b) => a.createdAt - b.createdAt,
@@ -173,10 +168,9 @@ const setTodos = (todoList, compareType = "default") => {
 
 	todoList.sort(compareFuncs[compareType]);
 	todoList.reverse().forEach((todo) => {
-		todoItemsContainer.appendChild(todoItem(todo.value, todo.createdAt));
+		todoItemsContainer.appendChild(todoItem(todo));
 	});
 };
-
 
 filterBtns.forEach((filterBtn) => {
 	filterBtn.addEventListener("click", (e) => {
@@ -184,29 +178,27 @@ filterBtns.forEach((filterBtn) => {
 
 		selectedFilter.classList.add("active");
 		selectedFilterType = selectedFilter.getAttribute("data-type");
-		console.log("selected filter type",selectedFilterType);
+		console.log("selected filter type", selectedFilterType);
 
 		filterBtns.forEach((f) => {
 			if (f !== selectedFilter && f.classList.contains("active"))
 				f.classList.remove("active");
 		});
 
-		setTodos(getFilteredList(todoItems,selectedFilterType))
+		setTodos();
 	});
 });
 
-const getFilteredList = (list,filterType = "all") => {
-
+const getFilteredList = (list, filterType = "all") => {
 	switch (filterType) {
 		case "all":
-			return list;			
+			return list;
 		case "active":
-			return list.filter(item => item.isCompleted === false);
+			return list.filter((item) => item.isCompleted === false);
 		case "completed":
-			return list.filter(item => item.isCompleted === true );
+			return list.filter((item) => item.isCompleted === true);
 		default:
 			console.log("select a valid filter type");
 			break;
 	}
-
-}
+};
