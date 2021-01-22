@@ -202,8 +202,12 @@ body {
 	justify-content: space-between;
 	font-size: 0.8rem;
 	color: var(--secondary-text-color);
-	padding: 18px;
+	padding: 0 18px;
 	border-radius: 0 0 5px 5px;
+}
+
+.options-container p {
+	padding: 18px 0;
 }
 
 .filter {
@@ -224,6 +228,10 @@ body {
 	color: var(--secondary-text-color);
 	font-size: 1rem;
 	font-weight: 700;
+	cursor: pointer;
+}
+
+.clear-completed {
 	cursor: pointer;
 }
 
