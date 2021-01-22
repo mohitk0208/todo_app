@@ -31,6 +31,7 @@
 	--todo-background: var(--v-l-g-blue);
 	--selected-filter-color: var(--bright-blue);
 	--secondary-text-color: var(--d-g-blue);
+	--todo-hover:var(--l-g-blue);
 
 	--background-image: url("./images/bg-mobile-light.jpg");
 	--mode-icon: url("./images/icon-moon.svg");
@@ -48,9 +49,22 @@ body.dark {
 	--text-color: var(--l-g-blue-D);
 	--todo-background: var(--v-d-desaturated-blue);
 	--secondary-text-color: var(--v-d-g-blue-D);
+	--todo-hover:var(--v-d-g-blue-2-D);
 
 	--background-image: url("./images/bg-mobile-dark.jpg");
 	--mode-icon: url("./images/icon-sun.svg");
+}
+
+@media (min-width:600px) {
+	
+	:root {
+		--background-image:url("./images/bg-desktop-light.jpg")
+	}
+
+	body.dark {
+		--background-image: url("./images/bg-desktop-dark.jpg");
+	}
+
 }
 
 body {
@@ -154,7 +168,7 @@ body {
 }
 
 .todo-item:hover {
-	background-color: var(--v-d-g-blue-2-D);
+	background-color: var(--todo-hover);
 }
 
 .todo-item input {
@@ -241,9 +255,20 @@ body {
 
 .dnd {
 	position: fixed;
+	left: 50%;
 	bottom: 15%;
-	width: 95%;
+	transform: translateX(-50%);
 	text-align: center;
 	color: var(--secondary-text-color);
 	font-size: 1rem;
+}
+
+
+@media (min-width:600px) {
+
+	.filter {
+		position: initial;
+		width: 50%;
+	}
+
 }
