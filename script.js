@@ -1,8 +1,42 @@
+class TodoItem {
+	constructor(text) {
+		this.createdAt = new Date().getTime();
+		this.value = text;
+		this.isCompleted = false;
+		this.completedAt = 0;
+	}
+
+	setCompleted(checked) {
+		if (checked) {
+			this.isCompleted = true;
+			this.completedAt = new Date().getTime();
+		} else {
+			this.isCompleted = false;
+			this.completedAt = 0;
+		}
+	}
+}
+
+// variables
+
 const body = document.querySelector("body");
 const todoMode = document.querySelector(".todo-mode");
 const todoAdd = document.querySelector(".todo-add");
 const todoItemsContainer = document.querySelector(".todo-items-container");
+const itemsLeft = document.querySelector(".items-left");
+const clearCompletedBtn = document.querySelector(".clear-completed");
 
+let todoItems = [];
+
+const setItemsLeftCount = () => {
+	const leftItems = todoItems.filter((t) => t.isCompleted === false).length;
+	itemsLeft.innerText = `${leftItems} items left`;
+};
+
+setItemsLeftCount();
+
+// ___________________________________________________________________
+// function related to theme
 //set to dark mode if the system is in dark mode
 if (
 	window.matchMedia &&
@@ -31,36 +65,53 @@ window
 todoMode.addEventListener("click", () => {
 	body.classList.toggle("dark");
 });
+//________________________________________________________________________
 
+//________________________________________________________________________
 todoAdd.addEventListener("submit", (e) => {
 	e.preventDefault();
 
 	const todoText = todoAdd.querySelector("input");
 
-	makeNewTodo(todoText.value);
-
+	const todo = new TodoItem(todoText.value);
+	console.log(todo);
+	// makeNewTodo(todo.value, todo.createdAt);
+	todoItems.push(todo);
+	setItemsLeftCount();
+	setTodos(todoItems);
+	console.log(todoItems);
 
 	todoText.value = "";
 });
 
-const todoItem = (text) => {
-
+// todo Item
+const todoItem = (text, todoId) => {
 	const div = document.createElement("div");
-	div.classList.add("todo-box","todo-item");
-	
+	div.classList.add("todo-box", "todo-item");
+	div.setAttribute("data-id", todoId);
+
 	const checkbox = document.createElement("input");
 	checkbox.type = "checkbox";
-	checkbox.name = "item-1";
-	checkbox.id = "item-1";
+	checkbox.name = `item-${todoId}`;
+	checkbox.id = `item-${todoId}`;
+
+	checkbox.addEventListener("change", () => {
+		const isCompleted = checkbox.checked;
+
+		const todo = todoItems.find((t) => t.createdAt === todoId);
+		todo.setCompleted(isCompleted);
+		setItemsLeftCount();
+		console.log(todo);
+	});
 
 	div.appendChild(checkbox);
 
 	const label = document.createElement("label");
 	label.classList.add("item-label");
-	label.htmlFor = "item-1";
+	label.htmlFor = `item-${todoId}`;
 	const textNode = document.createTextNode(text);
 	label.appendChild(textNode);
-	
+
 	div.appendChild(label);
 
 	const span = document.createElement("span");
@@ -68,28 +119,48 @@ const todoItem = (text) => {
 
 	div.appendChild(span);
 
-	const img = document.createElement("img");
-	img.src = "./images/icon-cross.svg"
-	img.classList.add("clear")
+	const clearTodo = document.createElement("img");
+	clearTodo.src = "./images/icon-cross.svg";
+	clearTodo.classList.add("clear");
 
-	img.addEventListener("click",(e) => {
-
+	clearTodo.addEventListener("click", (e) => {
 		const clearBtn = e.target;
 		console.log(clearBtn);
-		const TodoToDelete = clearBtn.closest(".todo-item");
+		// const TodoToDelete = clearBtn.closest(".todo-item");
 
-		TodoToDelete.remove();
+		todoItems = todoItems.filter((t) => t.createdAt !== todoId);
+		setItemsLeftCount();
+		setTodos(todoItems);
+		// TodoToDelete.remove();
+	});
 
-	})
-
-	div.appendChild(img);
+	div.appendChild(clearTodo);
 
 	return div;
+};
 
-}
+const makeNewTodo = (todoText, todoId) => {
+	todoItemsContainer.insertBefore(
+		todoItem(todoText, todoId),
+		todoItemsContainer.childNodes[0]
+	);
+};
+// _________________________________________________________________________
 
+clearCompletedBtn.addEventListener("click", () => {
+	console.log("clear completed clicked");
+	console.log("initial array",todoItems);
+	todoItems = todoItems.filter((t) => t.isCompleted === false);
+	console.log("final array",todoItems);
+	setItemsLeftCount();
+	setTodos(todoItems);
+});
 
-const makeNewTodo = (todoText) => {
+const setTodos = (todoList) => {
+	todoItemsContainer.innerHTML = "";
 
-	todoItemsContainer.insertBefore(todoItem(todoText), todoItemsContainer.childNodes[0]);
+	todoList.sort((a,b) => a.createdAt - b.createdAt);
+	todoList.reverse().forEach((todo) => {
+		todoItemsContainer.appendChild(todoItem(todo.value, todo.createdAt));
+	});
 };
