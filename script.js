@@ -25,8 +25,12 @@ const todoAdd = document.querySelector(".todo-add");
 const todoItemsContainer = document.querySelector(".todo-items-container");
 const itemsLeft = document.querySelector(".items-left");
 const clearCompletedBtn = document.querySelector(".clear-completed");
+const filterBtns = document.querySelectorAll(".filter p");
+
+console.log(filterBtns);
 
 let todoItems = [];
+let selectedFilterType = "all";
 
 const setItemsLeftCount = () => {
 	const leftItems = todoItems.filter((t) => t.isCompleted === false).length;
@@ -78,7 +82,7 @@ todoAdd.addEventListener("submit", (e) => {
 	// makeNewTodo(todo.value, todo.createdAt);
 	todoItems.push(todo);
 	setItemsLeftCount();
-	setTodos(todoItems);
+	setTodos(getFilteredList(todoItems,selectedFilterType));
 	console.log(todoItems);
 
 	todoText.value = "";
@@ -130,7 +134,7 @@ const todoItem = (text, todoId) => {
 
 		todoItems = todoItems.filter((t) => t.createdAt !== todoId);
 		setItemsLeftCount();
-		setTodos(todoItems);
+		setTodos(getFilteredList(todoItems,getFilteredList));
 		// TodoToDelete.remove();
 	});
 
@@ -149,18 +153,56 @@ const makeNewTodo = (todoText, todoId) => {
 
 clearCompletedBtn.addEventListener("click", () => {
 	console.log("clear completed clicked");
-	console.log("initial array",todoItems);
+	console.log("initial array", todoItems);
 	todoItems = todoItems.filter((t) => t.isCompleted === false);
-	console.log("final array",todoItems);
+	console.log("final array", todoItems);
 	setItemsLeftCount();
-	setTodos(todoItems);
+	setTodos(getFilteredList(todoItems,selectedFilterType));
 });
 
-const setTodos = (todoList) => {
+const setTodos = (todoList, compareType = "default") => {
 	todoItemsContainer.innerHTML = "";
 
-	todoList.sort((a,b) => a.createdAt - b.createdAt);
+	const compareFuncs = {
+		default: (a, b) => a.createdAt - b.createdAt,
+		completed: (a, b) => a.completedAt - b.completedAt,
+	};
+
+	todoList.sort(compareFuncs[compareType]);
 	todoList.reverse().forEach((todo) => {
 		todoItemsContainer.appendChild(todoItem(todo.value, todo.createdAt));
 	});
 };
+
+filterBtns.forEach((filterBtn) => {
+	filterBtn.addEventListener("click", (e) => {
+		const selectedFilter = e.target;
+
+		selectedFilter.classList.add("active");
+		selectedFilterType = selectedFilter.getAttribute("data-type");
+		console.log("selected filter type",selectedFilterType);
+
+		filterBtns.forEach((f) => {
+			if (f !== selectedFilter && f.classList.contains("active"))
+				f.classList.remove("active");
+		});
+
+		setTodos(getFilteredList(todoItems,selectedFilterType))
+	});
+});
+
+const getFilteredList = (list,filterType = "all") => {
+
+	switch (filterType) {
+		case "all":
+			return list;			
+		case "active":
+			return list.filter(item => item.isCompleted === false);
+		case "completed":
+			return list.filter(item => item.isCompleted === true );
+		default:
+			console.log("select a valid filter type");
+			break;
+	}
+
+}

@@ -203,15 +203,17 @@ body {
 	border-radius: 0 0 5px 5px;
 }
 
-.mobile-filter {
-	display: none;
-}
-
 .filter {
 	border-radius: 5px;
-	margin-top: 5%;
+	position: absolute;
+	top: 60px;
+	left: 0;
+	width: 100%;
+	display: flex;
 	align-items: center;
 	justify-content: center;
+	background-color: var(--todo-background);
+	padding: 18px;
 }
 
 .filter p {
