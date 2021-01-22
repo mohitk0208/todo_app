@@ -17,27 +17,9 @@ class TodoItem {
 	}
 }
 
-// variables
+
 const body = document.querySelector("body");
 const todoMode = document.querySelector(".todo-mode");
-const todoAdd = document.querySelector(".todo-add");
-const todoItemsContainer = document.querySelector(".todo-items-container");
-const itemsLeft = document.querySelector(".items-left");
-const clearCompletedBtn = document.querySelector(".clear-completed");
-const filterBtns = document.querySelectorAll(".filter p");
-
-console.log(filterBtns);
-
-let todoItems = [];
-let selectedFilterType = "all";
-
-const setItemsLeftCount = () => {
-	const leftItems = todoItems.filter((t) => t.isCompleted === false).length;
-	itemsLeft.innerText = `${leftItems} items left`;
-};
-
-setItemsLeftCount();
-
 // ___________________________________________________________________
 // function related to theme
 //set to dark mode if the system is in dark mode
@@ -70,23 +52,40 @@ todoMode.addEventListener("click", () => {
 });
 //________________________________________________________________________
 
+
+
+
+
+
+
+
 //________________________________________________________________________
-todoAdd.addEventListener("submit", (e) => {
-	e.preventDefault();
+// DOM Elements
+const todoAdd = document.querySelector(".todo-add");
+const todoItemsContainer = document.querySelector(".todo-items-container");
+const itemsLeft = document.querySelector(".items-left");
+const clearCompletedBtn = document.querySelector(".clear-completed");
+const filterBtns = document.querySelectorAll(".filter p");
 
-	const todoText = todoAdd.querySelector("input");
+console.log(filterBtns);
 
-	const todo = new TodoItem(todoText.value);
-	console.log(todo);
-	todoItems.push(todo);
-	setItemsLeftCount();
-	setTodos();
-	console.log(todoItems);
+// variables
+let todoItems = [];
+let selectedFilterType = "all";
+// ________________________________________________________________________
 
-	todoText.value = "";
-});
 
-// todo Item
+
+
+// _________________________________________________________________________
+// functions
+
+const setItemsLeftCount = () => {
+	const leftItems = todoItems.filter((t) => t.isCompleted === false).length;
+	itemsLeft.innerText = `${leftItems} items left`;
+};
+
+
 const todoItem = ({value:text, createdAt:todoId,isCompleted:isCompleteStatus }) => {
 	const div = document.createElement("div");
 	div.classList.add("todo-box", "todo-item");
@@ -142,16 +141,23 @@ const todoItem = ({value:text, createdAt:todoId,isCompleted:isCompleteStatus }) 
 
 	return div;
 };
-// _________________________________________________________________________
 
-clearCompletedBtn.addEventListener("click", () => {
-	console.log("clear completed clicked");
-	console.log("initial array", todoItems);
-	todoItems = todoItems.filter((t) => t.isCompleted === false);
-	console.log("final array", todoItems);
-	setItemsLeftCount();
-	setTodos();
-});
+
+const getFilteredList = (list, filterType = "all") => {
+	switch (filterType) {
+		case "all":
+			return list;
+		case "active":
+			return list.filter((item) => item.isCompleted === false);
+		case "completed":
+			return list.filter((item) => item.isCompleted === true);
+		default:
+			console.log("select a valid filter type");
+			break;
+	}
+};
+
+
 
 const setTodos = () => {
 	todoItemsContainer.innerHTML = "";
@@ -172,6 +178,47 @@ const setTodos = () => {
 	});
 };
 
+// __________________________________________________________________________
+
+
+
+
+
+
+setItemsLeftCount();
+
+
+
+// _____________________________________________________________________
+// event listeners
+
+todoAdd.addEventListener("submit", (e) => {
+	e.preventDefault();
+
+	const todoText = todoAdd.querySelector("input");
+
+	const todo = new TodoItem(todoText.value);
+	console.log(todo);
+	todoItems.push(todo);
+	setItemsLeftCount();
+	setTodos();
+	console.log(todoItems);
+
+	todoText.value = "";
+});
+
+
+clearCompletedBtn.addEventListener("click", () => {
+	console.log("clear completed clicked");
+	console.log("initial array", todoItems);
+	todoItems = todoItems.filter((t) => t.isCompleted === false);
+	console.log("final array", todoItems);
+	setItemsLeftCount();
+	setTodos();
+});
+
+
+
 filterBtns.forEach((filterBtn) => {
 	filterBtn.addEventListener("click", (e) => {
 		const selectedFilter = e.target;
@@ -188,17 +235,4 @@ filterBtns.forEach((filterBtn) => {
 		setTodos();
 	});
 });
-
-const getFilteredList = (list, filterType = "all") => {
-	switch (filterType) {
-		case "all":
-			return list;
-		case "active":
-			return list.filter((item) => item.isCompleted === false);
-		case "completed":
-			return list.filter((item) => item.isCompleted === true);
-		default:
-			console.log("select a valid filter type");
-			break;
-	}
-};
+// _______________________________________________________________________
