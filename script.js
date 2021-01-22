@@ -18,7 +18,6 @@ class TodoItem {
 }
 
 // variables
-
 const body = document.querySelector("body");
 const todoMode = document.querySelector(".todo-mode");
 const todoAdd = document.querySelector(".todo-add");
@@ -70,6 +69,7 @@ todoMode.addEventListener("click", () => {
 	body.classList.toggle("dark");
 });
 //________________________________________________________________________
+
 
 //________________________________________________________________________
 todoAdd.addEventListener("submit", (e) => {
@@ -134,7 +134,8 @@ const todoItem = (text, todoId) => {
 
 		todoItems = todoItems.filter((t) => t.createdAt !== todoId);
 		setItemsLeftCount();
-		setTodos(getFilteredList(todoItems,getFilteredList));
+
+		setTodos(getFilteredList(todoItems,selectedFilterType));
 		// TodoToDelete.remove();
 	});
 
@@ -163,6 +164,8 @@ clearCompletedBtn.addEventListener("click", () => {
 const setTodos = (todoList, compareType = "default") => {
 	todoItemsContainer.innerHTML = "";
 
+	todoList = getFilteredList(todoItems,selectedFilterType);
+
 	const compareFuncs = {
 		default: (a, b) => a.createdAt - b.createdAt,
 		completed: (a, b) => a.completedAt - b.completedAt,
@@ -173,6 +176,7 @@ const setTodos = (todoList, compareType = "default") => {
 		todoItemsContainer.appendChild(todoItem(todo.value, todo.createdAt));
 	});
 };
+
 
 filterBtns.forEach((filterBtn) => {
 	filterBtn.addEventListener("click", (e) => {
