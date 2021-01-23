@@ -2,7 +2,13 @@ import TodoItem from "./TodoItem.js";
 
 // import {read,add} from "./indexedDb.js";
 
-import { addTodo, getTodo, getAllTodos ,updateTodo,deleteTodo} from "./indexedDb2.js";
+import {
+	addTodo,
+	getAllTodos,
+	updateTodo,
+	deleteTodo,
+	deleteMany,
+} from "./indexedDb2.js";
 
 // addTodo(new TodoItem("different stuff"));
 
@@ -63,15 +69,20 @@ const filterBtns = document.querySelectorAll(".filter p");
 console.log(filterBtns);
 
 // variables
-let todoItems = [];
+// let todoItems = [];
 let selectedFilterType = "all";
+// (async () => {
+// 	todoItems = await getAllTodos();
+// console.log(todoItems);
+// })();
 // ________________________________________________________________________
 
 // _________________________________________________________________________
 // functions
 
-const setItemsLeftCount = () => {
-	const leftItems = todoItems.filter((t) => t.isCompleted === false).length;
+const setItemsLeftCount = async () => {
+	// const leftItems = todoItems.filter((t) => t.isCompleted === false).length;
+	const leftItems = getFilteredList(await getAllTodos(), "active").length;
 	itemsLeft.innerText = `${leftItems} items left`;
 };
 
@@ -80,27 +91,35 @@ const todoItem = ({
 	createdAt: todoId,
 	isCompleted: isCompleteStatus,
 }) => {
+	//__________DIV_______________________
 	const div = document.createElement("div");
 	div.classList.add("todo-box", "todo-item");
 	div.setAttribute("data-id", todoId);
 
+	//_______________CHECKBOX____________________
 	const checkbox = document.createElement("input");
 	checkbox.type = "checkbox";
 	checkbox.name = `item-${todoId}`;
 	checkbox.id = `item-${todoId}`;
 	checkbox.checked = isCompleteStatus;
 
-	checkbox.addEventListener("change", () => {
+	checkbox.addEventListener("change", async () => {
 		const isCompleted = checkbox.checked;
 
-		const todo = todoItems.find((t) => t.createdAt === todoId);
-		todo.setCompleted(isCompleted);
+		// const todo = todoItems.find((t) => t.createdAt === todoId);
+		await updateTodo(
+			todoId,
+			isCompleted,
+			isCompleted ? new Date().getTime() : 0
+		);
+		// todo.setCompleted(isCompleted);
 		setItemsLeftCount();
-		console.log(todo);
+		// console.log(todo);
 	});
 
 	div.appendChild(checkbox);
 
+	//_______________________LABEL___________________
 	const label = document.createElement("label");
 	label.classList.add("item-label");
 	label.htmlFor = `item-${todoId}`;
@@ -109,21 +128,24 @@ const todoItem = ({
 
 	div.appendChild(label);
 
+	//___________________SPAN___________________
 	const span = document.createElement("span");
 	span.classList.add("checkmark");
 
 	div.appendChild(span);
 
+	//__________________CLEARTODO____________________
 	const clearTodo = document.createElement("img");
 	clearTodo.src = "./images/icon-cross.svg";
 	clearTodo.classList.add("clear");
 
-	clearTodo.addEventListener("click", (e) => {
+	clearTodo.addEventListener("click",async (e) => {
 		const clearBtn = e.target;
 		console.log(clearBtn);
 		// const TodoToDelete = clearBtn.closest(".todo-item");
 
-		todoItems = todoItems.filter((t) => t.createdAt !== todoId);
+		// todoItems = todoItems.filter((t) => t.createdAt !== todoId);
+		await deleteTodo(todoId);
 		setItemsLeftCount();
 
 		setTodos();
@@ -149,12 +171,12 @@ const getFilteredList = (list, filterType = "all") => {
 	}
 };
 
-const setTodos = () => {
+const setTodos = async () => {
 	todoItemsContainer.innerHTML = "";
 
 	let compareType = "default";
 
-	let todoList = getFilteredList(todoItems, selectedFilterType);
+	let todoList = getFilteredList(await getAllTodos(), selectedFilterType);
 	if (selectedFilterType === "completed") compareType = "completed";
 
 	const compareFuncs = {
@@ -168,6 +190,7 @@ const setTodos = () => {
 	});
 };
 
+setTodos();
 // __________________________________________________________________________
 
 setItemsLeftCount();
@@ -182,19 +205,22 @@ todoAdd.addEventListener("submit", (e) => {
 
 	const todo = new TodoItem(todoText.value);
 	console.log(todo);
-	todoItems.push(todo);
+	// todoItems.push(todo);
+	addTodo(todo);
 	setItemsLeftCount();
 	setTodos();
-	console.log(todoItems);
+	// console.log(todoItems);
 
 	todoText.value = "";
 });
 
-clearCompletedBtn.addEventListener("click", () => {
+clearCompletedBtn.addEventListener("click",async () => {
 	console.log("clear completed clicked");
-	console.log("initial array", todoItems);
-	todoItems = todoItems.filter((t) => t.isCompleted === false);
-	console.log("final array", todoItems);
+	// console.log("initial array", todoItems);
+	// todoItems = todoItems.filter((t) => t.isCompleted === false);
+	let itemsToDelete = (await getAllTodos()).filter(t => t.isCompleted === true).map(t => t.createdAt);
+	deleteMany(itemsToDelete);
+	// console.log("final array", todoItems);
 	setItemsLeftCount();
 	setTodos();
 });
