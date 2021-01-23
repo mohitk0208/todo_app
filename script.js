@@ -1,21 +1,4 @@
-class TodoItem {
-	constructor(text) {
-		this.createdAt = new Date().getTime();
-		this.value = text;
-		this.isCompleted = false;
-		this.completedAt = 0;
-	}
-
-	setCompleted(checked) {
-		if (checked) {
-			this.isCompleted = true;
-			this.completedAt = new Date().getTime();
-		} else {
-			this.isCompleted = false;
-			this.completedAt = 0;
-		}
-	}
-}
+import TodoItem from "./TodoItem.js";
 
 
 const body = document.querySelector("body");
@@ -164,7 +147,7 @@ const setTodos = () => {
 
 	let compareType = "default";
 
-	todoList = getFilteredList(todoItems, selectedFilterType);
+	let todoList = getFilteredList(todoItems, selectedFilterType);
 	if (selectedFilterType === "completed") compareType = "completed";
 
 	const compareFuncs = {
