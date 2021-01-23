@@ -1,5 +1,22 @@
 import TodoItem from "./TodoItem.js";
 
+// import {read,add} from "./indexedDb.js";
+
+import { addTodo, getTodo, getAllTodos ,updateTodo,deleteTodo} from "./indexedDb2.js";
+
+// addTodo(new TodoItem("different stuff"));
+
+// (async () => {
+// 	console.log(await getTodo(1611399882127));
+// })();
+
+// (async () => {
+// 	console.log(await getAllTodos());
+// })();
+
+// updateTodo(1611401092656,true,new Date().getTime())
+
+// deleteTodo(1611402374153);
 
 const body = document.querySelector("body");
 const todoMode = document.querySelector(".todo-mode");
@@ -35,13 +52,6 @@ todoMode.addEventListener("click", () => {
 });
 //________________________________________________________________________
 
-
-
-
-
-
-
-
 //________________________________________________________________________
 // DOM Elements
 const todoAdd = document.querySelector(".todo-add");
@@ -57,9 +67,6 @@ let todoItems = [];
 let selectedFilterType = "all";
 // ________________________________________________________________________
 
-
-
-
 // _________________________________________________________________________
 // functions
 
@@ -68,8 +75,11 @@ const setItemsLeftCount = () => {
 	itemsLeft.innerText = `${leftItems} items left`;
 };
 
-
-const todoItem = ({value:text, createdAt:todoId,isCompleted:isCompleteStatus }) => {
+const todoItem = ({
+	value: text,
+	createdAt: todoId,
+	isCompleted: isCompleteStatus,
+}) => {
 	const div = document.createElement("div");
 	div.classList.add("todo-box", "todo-item");
 	div.setAttribute("data-id", todoId);
@@ -125,7 +135,6 @@ const todoItem = ({value:text, createdAt:todoId,isCompleted:isCompleteStatus }) 
 	return div;
 };
 
-
 const getFilteredList = (list, filterType = "all") => {
 	switch (filterType) {
 		case "all":
@@ -139,8 +148,6 @@ const getFilteredList = (list, filterType = "all") => {
 			break;
 	}
 };
-
-
 
 const setTodos = () => {
 	todoItemsContainer.innerHTML = "";
@@ -163,14 +170,7 @@ const setTodos = () => {
 
 // __________________________________________________________________________
 
-
-
-
-
-
 setItemsLeftCount();
-
-
 
 // _____________________________________________________________________
 // event listeners
@@ -190,7 +190,6 @@ todoAdd.addEventListener("submit", (e) => {
 	todoText.value = "";
 });
 
-
 clearCompletedBtn.addEventListener("click", () => {
 	console.log("clear completed clicked");
 	console.log("initial array", todoItems);
@@ -199,8 +198,6 @@ clearCompletedBtn.addEventListener("click", () => {
 	setItemsLeftCount();
 	setTodos();
 });
-
-
 
 filterBtns.forEach((filterBtn) => {
 	filterBtn.addEventListener("click", (e) => {
