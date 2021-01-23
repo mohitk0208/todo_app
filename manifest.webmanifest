@@ -14,9 +14,9 @@
 			"sizes": "512x512"
 		}
 	],
-	"start_url": "/?source=pwa",
+	"start_url": "/todo_app/?source=pwa",
 	"background_color": "#b8b8b8",
 	"display": "standalone",
-	"scope": "/",
+	"scope": "/todo_app/",
 	"theme_color": "#872bac"
 }
