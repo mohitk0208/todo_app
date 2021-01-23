@@ -1,7 +1,5 @@
 import TodoItem from "./TodoItem.js";
-
 // import {read,add} from "./indexedDb.js";
-
 import {
 	addTodo,
 	getAllTodos,
@@ -9,6 +7,15 @@ import {
 	deleteTodo,
 	deleteMany,
 } from "./indexedDb2.js";
+
+if(navigator.serviceWorker) {
+	window.addEventListener("load",() => {
+		navigator.serviceWorker
+		.register("./sw_cache_site.js")
+		.then(reg => console.log("Service Worker registered"))
+		.catch(err => console.error(`Service Worker: Error ${err}`));
+	})
+}
 
 // addTodo(new TodoItem("different stuff"));
 
