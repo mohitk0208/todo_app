@@ -63,7 +63,6 @@ export async function updateTodo(todoId, isCompleted, completedAt) {
 }
 
 export async function deleteTodo(todoId) {
-
 	let db = await idb.openDB("todoDb", 1, (upgradeDb) =>
 		upgradeDb.createObjectStore("todos", { keyPath: "createdAt" })
 	);
@@ -71,7 +70,25 @@ export async function deleteTodo(todoId) {
 	let tx = db.transaction("todos", "readwrite");
 	let store = tx.objectStore("todos");
 
-    await store.delete(todoId);
+	await store.delete(todoId);
+
+	await tx.done;
+	db.close();
+}
+
+export async function deleteMany(todoIds) {
+	let db = await idb.openDB("todoDb", 1, (upgradeDb) =>
+		upgradeDb.createObjectStore("todos", { keyPath: "createdAt" })
+	);
+
+	let tx = db.transaction("todos", "readwrite");
+	let store = tx.objectStore("todos");
+
+    await Promise.all(
+        todoIds.map(todoId => store.delete(todoId))
+    );
+
+	// await store.delete(todoId);
 
 	await tx.done;
 	db.close();
